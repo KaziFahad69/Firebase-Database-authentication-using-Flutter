@@ -11,11 +11,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Home Page'), centerTitle: true,backgroundColor: Colors.blue,),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text('Home Page'), centerTitle: true,backgroundColor: Colors.blue,),
       body: Center(child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("HomePage")
+          Text("Finally HomePage")
         ],
       ),),
     );
