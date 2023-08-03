@@ -1,8 +1,12 @@
-import 'package:agunbase/homepage.dart';
+import 'package:agunbase/ui/auth/loginwithphonenumber.dart';
 import 'package:agunbase/ui/auth/signup_screen.dart';
+import 'package:agunbase/ui/posts/postscreen.dart';
+import 'package:agunbase/ui/utils/utils.dart';
 import 'package:agunbase/widgets/roundbutton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,6 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _emailcontroller = TextEditingController();
   TextEditingController _passwordcontroller = TextEditingController();
+  bool loading = false;
+  final _auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -24,16 +30,43 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordcontroller.dispose();
   }
 
+  void logIn() {
+    setState(() {
+        loading = true;
+      });
+    _auth
+        .signInWithEmailAndPassword(
+            email: _emailcontroller.text,
+            password: _passwordcontroller.text.toString())
+        .then((value) {
+      Utils().toastMessage(value.user!.email.toString());
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => PostScreen()));
+          setState(() {
+        loading = false;
+      });
+    }).onError((error, stackTrace) {
+      Utils().toastMessage(error.toString());
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: ()async{
+      onWillPop: () async {
         SystemNavigator.pop();
         return true;
       },
       child: Scaffold(
           appBar: AppBar(
-            title: Text("Login",style: TextStyle(color: Colors.white),),centerTitle: true,
+            title: Text(
+              "Login",
+              style: TextStyle(color: Colors.white),
+            ),
+            centerTitle: true,
             automaticallyImplyLeading: false,
           ),
           body: Padding(
@@ -47,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       children: [
                         CustomeTextFormField(
-                          keyboardType: TextInputType.emailAddress,
+                            keyboardType: TextInputType.emailAddress,
                             controller: _emailcontroller,
                             hinttext: "Email",
                             icon: Icon(Icons.email_outlined),
@@ -56,18 +89,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return 'Please enter your email';
                               }
                               // use a regular expression to check if the email contains @ and a domain name
-                              RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                              RegExp emailRegex =
+                                  RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
                               if (!emailRegex.hasMatch(value)) {
                                 return 'Please enter a valid email';
                               }
                               return null;
-                            }
-                        ),
+                            }),
                         SizedBox(
                           height: 20,
                         ),
                         CustomeTextFormField(
-                          keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.text,
                             iconsuffix: Icon(Icons.visibility_off),
                             controller: _passwordcontroller,
                             hinttext: "Password",
@@ -82,32 +115,51 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return 'Please enter a password with at least 6 characters';
                               }
                               return null;
-                            }
-                        )
-    
+                            })
                       ],
                     )),
                 SizedBox(
                   height: 30,
                 ),
                 RoundBoutton(
+                  loading: loading,
                   title: "Login",
                   ontap: () {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomePage()));
+                      logIn();
                     }
                   },
                 ),
-                SizedBox(height: 30,),
+                SizedBox(
+                  height: 30,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("Don't have an account? "),
-                    TextButton(onPressed:(){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SignupScreen()));
-                    },
-                    child: Text("Sign up ")),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => SignupScreen()));
+                        },
+                        child: Text("Sign up ")),
+                        
                   ],
+                ),
+                InkWell(
+                  onTap: (){
+                   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>LoginWithPhoneNumber()));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                            height: 50,
+                            width: double.infinity,
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(50),
+                            border: Border.all(
+                              color: Colors.black
+                            )),
+                            child: Center(child: Text("Login with Phone",style: style(fontWeight: FontWeight.bold),)),
+                          ),
                 )
               ],
             ),
@@ -116,18 +168,38 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
+// TextStyle style({String fontFamily = 'Roboto', FontWeight ? fontWeight, FontStyle ? fontStyle, Color color = Colors.black, double ? size}) {
+//   return GoogleFonts.getFont(
+//     fontFamily,
+//     fontWeight: fontWeight,
+//     fontStyle: fontStyle,
+//     color: color,
+//     fontSize: size,
+//   );
+// }
+
+TextStyle style({String fontFamily = 'Roboto', FontWeight? fontWeight, FontStyle? fontStyle, Color? color, double? size}) {
+  return GoogleFonts.getFont(
+    fontFamily,
+    fontWeight: fontWeight ?? FontWeight.normal,
+    fontStyle: fontStyle ?? FontStyle.normal,
+    color: color ?? Colors.black,
+    fontSize: size ?? 16.0,
+  );
+}
+
 class CustomeTextFormField extends StatefulWidget {
   final TextEditingController controller;
   final String hinttext;
   final Icon icon;
   final Icon? iconsuffix;
   final String? Function(String?)? validator;
-  final TextInputType ? keyboardType;
+  final TextInputType? keyboardType;
 
   CustomeTextFormField(
       {this.iconsuffix,
-        this.keyboardType,
-        this.validator,
+      this.keyboardType,
+      this.validator,
       required this.controller,
       required this.hinttext,
       required this.icon});
