@@ -1,4 +1,5 @@
 import 'package:agunbase/ui/auth/loginscreen.dart';
+import 'package:agunbase/ui/posts/add_post_screen.dart';
 import 'package:agunbase/ui/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,9 @@ class _PostScreenState extends State<PostScreen> {
         }, icon: Icon(Icons.logout_outlined))],
         automaticallyImplyLeading: false,
         title: Text('Posts'), centerTitle: true,backgroundColor: Colors.blue,),
+        floatingActionButton: FloatingActionButton(onPressed: (){
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>AddPostScreen()));
+        }, child: Icon(Icons.add),),
       body: Center(child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
