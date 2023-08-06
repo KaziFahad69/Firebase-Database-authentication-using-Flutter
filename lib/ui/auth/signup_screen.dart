@@ -57,7 +57,7 @@ class _SignupScreenState extends State<SignupScreen> {
           //automaticallyImplyLeading: false,
         ),
         body: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.symmetric(horizontal:20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -104,7 +104,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             return null;
                           }
                       )
-
+          
                     ],
                   )),
               SizedBox(

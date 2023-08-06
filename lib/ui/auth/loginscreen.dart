@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
             automaticallyImplyLeading: false,
           ),
           body: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(horizontal:20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -119,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     )),
                 SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 RoundBoutton(
                   loading: loading,
@@ -130,9 +130,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   },
                 ),
-                SizedBox(
-                  height: 30,
-                ),
+                // SizedBox(
+                //   height: 10,
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

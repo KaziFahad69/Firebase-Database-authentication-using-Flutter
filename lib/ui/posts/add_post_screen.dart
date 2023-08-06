@@ -52,12 +52,14 @@ class AddPostScreenState extends State<AddPostScreen> {
             setState(() {
               loading = true;
             });
-            databaseRef.child(DateTime.now().millisecondsSinceEpoch.toString()).set({
+            String id = DateTime.now().millisecondsSinceEpoch.toString();
+            databaseRef.child(id).set({
               'title': postcontroller.text.toString(),
-              'id': DateTime.now().millisecondsSinceEpoch.toString(),
+              'id': id,
 
             }).then((value){
               Utils().toastMessage("Post Added");
+              Navigator.pop(context);
               setState(() {
               loading = false;
             });
@@ -72,4 +74,5 @@ class AddPostScreenState extends State<AddPostScreen> {
       ),
     );
   }
+
 }
