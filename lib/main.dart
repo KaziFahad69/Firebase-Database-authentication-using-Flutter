@@ -1,3 +1,5 @@
+import 'package:agunbase/firestore/add_firestore_data.dart';
+import 'package:agunbase/firestore/firestore_list_screen.dart';
 import 'package:agunbase/ui/splashscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +25,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:SplashPage()
+      home:
+      //SplashPage()
+      FirestoreListScreen()
     );
   }
 }
